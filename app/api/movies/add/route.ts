@@ -5,18 +5,15 @@ import { prisma } from "@/lib/prisma";
 export async function POST(request: NextRequest) {
   const { userId } = await auth();
   if (!userId) {
-    return NextResponse.json({ error: "Neautentificat" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { tmdbId, title, overview, posterUrl, releaseYear } = body;
+  const { tmdbId, title, overview, posterUrl, releaseYear } = await request.json();
 
   if (!tmdbId || !title) {
-    return NextResponse.json({ error: "Date lipsă" }, { status: 400 });
+    return NextResponse.json({ error: "Missing data" }, { status: 400 });
   }
 
-  // 1. Filmul există deja în DB? Dacă nu, îl creăm.
-  //    upsert = "update sau insert" — o singură interogare, fără race conditions.
   const movie = await prisma.movie.upsert({
     where: { tmdbId },
     update: {},
@@ -29,7 +26,6 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // 2. Legăm filmul de user. Dacă există deja, nu duplicăm.
   const entry = await prisma.journalEntry.upsert({
     where: { userId_movieId: { userId, movieId: movie.id } },
     update: {},

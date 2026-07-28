@@ -39,7 +39,7 @@ export default function MovieSearch() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Caută un film..."
+          placeholder="Search for a movie..."
           className="flex-1 px-4 py-2 rounded-lg bg-zinc-800 text-zinc-100 outline-none"
         />
         <button
@@ -47,7 +47,7 @@ export default function MovieSearch() {
           disabled={loading}
           className="px-6 py-2 rounded-lg bg-zinc-100 text-zinc-900 disabled:opacity-50"
         >
-          {loading ? "Caut..." : "Caută"}
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
@@ -64,7 +64,7 @@ export default function MovieSearch() {
               />
             ) : (
               <div className="aspect-[2/3] bg-zinc-800 flex items-center justify-center text-zinc-500 text-sm">
-                fără poster
+                no poster
               </div>
             )}
             <div className="p-3">
@@ -75,7 +75,7 @@ export default function MovieSearch() {
                 disabled={added.includes(movie.tmdbId)}
                 className="w-full text-xs py-1.5 rounded bg-zinc-700 text-zinc-100 disabled:opacity-40"
               >
-                {added.includes(movie.tmdbId) ? "✓ Adăugat" : "+ Jurnal"}
+                {added.includes(movie.tmdbId) ? "✓ Added" : "+ Journal"}
               </button>
             </div>
           </div>
