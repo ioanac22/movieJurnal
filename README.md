@@ -26,7 +26,7 @@ It also includes an AI chatbox strictly limited to cinema topics.
 | Auth | Clerk |
 | Database | Neon (PostgreSQL) + Prisma |
 | Movie data | TMDB API |
-| AI | Google Gemini (gemini-2.0-flash) |
+| AI | Google Gemini (gemini-3.5-flash)|
 
 ## Project structure
 
