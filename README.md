@@ -1,37 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 Flickpick
 
-## Getting Started
+A personal movie journal where you have to prove you actually watched the film.
 
-First, run the development server:
+## The idea
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Anyone can rate a movie they never saw. Flickpick fixes that: before you can leave a rating or review, an AI generates 5 questions about specific scenes, dialogue, and plot details — the kind of thing you can't answer from a Wikipedia summary. Score at least 4/5 and the rating unlocks.
+
+It also includes an AI chatbox strictly limited to cinema topics.
+
+## Features
+
+- 🔐 Authentication with Clerk
+- 🔍 Movie search powered by TMDB
+- 📓 Personal journal of watched films
+- 🧠 AI-generated quiz, validated server-side
+- ⭐ Ratings and reviews unlocked by passing the quiz
+- 💬 Film-only AI chatbox
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Styling | TailwindCSS v4 |
+| Auth | Clerk |
+| Database | Neon (PostgreSQL) + Prisma |
+| Movie data | TMDB API |
+| AI | Google Gemini (gemini-2.0-flash) |
+
+## Project structure
+
+```
+app/
+  api/          # server routes (search, quiz, chat)
+  search/       # search page
+components/     # React components
+lib/            # clients: prisma, tmdb, gemini
+prisma/         # schema and migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Security note
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Quiz answer keys (`correctIndex`) never leave the server. The client receives only questions and options. Validation happens in `/api/quiz/submit`, and the `quizPassed` flag lives in the database — it can't be flipped from DevTools.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Running locally
 
-## Learn More
+```bash
+npm install
+cp .env.example .env.local   # fill in your keys
+npx prisma migrate dev
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Live demo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# movieJurnal
+🔗 
