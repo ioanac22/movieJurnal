@@ -54,4 +54,4 @@ npm run dev
 
 ## Live demo
 
-🔗 
+🔗https://movie-jurnal-xi.vercel.app/
