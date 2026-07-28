@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  tmdbId      Int      @unique
+  title       String
+  overview    String?
+  posterPath  String?
+  releaseYear Int?
+  createdAt   DateTime @default(now())
+
+  journalEntries JournalEntry[]
+  quizQuestions  QuizQuestion[]
+}
+
+model JournalEntry {
+  id      String @id @default(cuid())
+  userId  String // ID din Clerk (user_2abc...)
+  movieId String
+  movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  watchedAt DateTime @default(now())
+
+  // Poarta către rating — se schimbă DOAR server-side
+  quizPassed   Boolean @default(false)
+  quizScore    Int?
+  quizAttempts Int     @default(0)
+
+  rating Int?
+  review String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, movieId])
+  @@index([userId])
+}
+
+model QuizQuestion {
+  id      String @id @default(cuid())
+  movieId String
+  movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  question     String
+  options      String[]
+  correctIndex Int      // ⚠️ NU pleacă NICIODATĂ către browser
+  order        Int
+
+  createdAt DateTime @default(now())
+
+  @@index([movieId])
+}
