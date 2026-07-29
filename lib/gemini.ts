@@ -8,6 +8,8 @@ type GeminiOptions = {
   temperature?: number;
 };
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 export async function askGemini(
   prompt: string,
   options: GeminiOptions = {}
@@ -26,25 +28,38 @@ export async function askGemini(
     body.systemInstruction = { parts: [{ text: systemInstruction }] };
   }
 
-  const res = await fetch(GEMINI_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-goog-api-key": process.env.GEMINI_API_KEY!,
-    },
-    body: JSON.stringify(body),
-  });
+  // 503 (overloaded) and 429 (rate limited) are temporary — back off and retry
+  const MAX_ATTEMPTS = 4;
 
-  if (!res.ok) {
-    const detail = await res.text();
-    throw new Error(`Gemini ${res.status}: ${detail.slice(0, 200)}`);
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const res = await fetch(GEMINI_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": process.env.GEMINI_API_KEY!,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("Empty Gemini response");
+      return text;
+    }
+
+    const retryable = res.status === 503 || res.status === 429;
+
+    if (!retryable || attempt === MAX_ATTEMPTS) {
+      const detail = await res.text();
+      throw new Error(`Gemini ${res.status}: ${detail.slice(0, 200)}`);
+    }
+
+    // 1s, 2s, 4s
+    await sleep(1000 * 2 ** (attempt - 1));
   }
 
-  const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!text) throw new Error("Empty Gemini response");
-  return text;
+  throw new Error("Gemini unreachable");
 }
 
 export function parseJsonSafe<T>(raw: string): T {

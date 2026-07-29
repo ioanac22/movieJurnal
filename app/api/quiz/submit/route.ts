@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
   const questions = await prisma.quizQuestion.findMany({
     where: { movieId: entry.movieId },
     orderBy: { order: "asc" },
+    take: 5,
   });
 
   if (questions.length === 0) {

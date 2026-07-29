@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
-import FloatingChat from "@/components/FloatingChat";
-
 import {
   ClerkProvider,
   SignInButton,
@@ -10,6 +8,7 @@ import {
   Show,
   UserButton,
 } from "@clerk/nextjs";
+import FloatingChat from "@/components/FloatingChat";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,7 +40,7 @@ export default function RootLayout({
               flick<span className="text-blush">pick</span>
             </Link>
 
-            <div className="flex items-center gap-3">
+            <nav className="flex items-center gap-5">
               <Show when="signed-out">
                 <SignInButton mode="modal">
                   <button className="text-sm text-muted hover:text-cream transition-colors cursor-pointer">
@@ -56,23 +55,41 @@ export default function RootLayout({
               </Show>
 
               <Show when="signed-in">
-                <Link href="/dashboard" className="text-sm text-muted hover:text-cream transition-colors">
-                      Discover
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-muted hover:text-cream transition-colors"
+                >
+                  Discover
                 </Link>
-                <Link href="/watchlist" className="text-sm text-muted hover:text-cream transition-colors">
-                     Watchlist
+                <Link
+                  href="/watchlist"
+                  className="text-sm text-muted hover:text-cream transition-colors"
+                >
+                  Watchlist
                 </Link>
-          <UserButton />
-          </Show>
-            </div>
+                <Link
+                  href="/profile"
+                  className="text-sm text-muted hover:text-cream transition-colors"
+                >
+                  Profile
+                </Link>
+                <Link
+                  href="/friends"
+                  className="text-sm text-muted hover:text-cream transition-colors"
+                >
+                  Friends
+                </Link>
+                <UserButton />
+              </Show>
+            </nav>
           </header>
 
           {children}
+
           <Show when="signed-in">
             <FloatingChat />
           </Show>
         </body>
-
       </html>
     </ClerkProvider>
   );
