@@ -27,7 +27,7 @@ export default async function Home() {
 
         {userId ? (
           <Link
-            href="/search"
+            href="/dashboard"
             className="inline-block px-8 py-3.5 rounded-full bg-blush text-ink font-medium hover:bg-apricot transition-colors"
           >
             Go to your journal

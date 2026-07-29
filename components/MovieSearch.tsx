@@ -25,12 +25,15 @@ export default function MovieSearch() {
   }
 
   async function handleAdd(movie: MovieResult) {
+    setAdded((prev) => [...prev, movie.tmdbId]);          // instant
     const res = await fetch("/api/movies/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(movie),
     });
-    if (res.ok) setAdded((prev) => [...prev, movie.tmdbId]);
+    if (!res.ok) {
+      setAdded((prev) => prev.filter((id) => id !== movie.tmdbId)); // rollback
+    }
   }
 
   return (
