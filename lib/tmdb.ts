@@ -41,3 +41,27 @@ export async function searchMovies(query: string): Promise<MovieResult[]> {
     releaseYear: m.release_date ? Number(m.release_date.slice(0, 4)) : null,
   }));
 }
+
+export async function getTrendingMovies(): Promise<MovieResult[]> {
+  const res = await fetch(`${TMDB_BASE}/trending/movie/week?language=en-US`, {
+    headers: {
+      Authorization: `Bearer ${process.env.TMDB_READ_TOKEN}`,
+      accept: "application/json",
+    },
+    next: { revalidate: 86400 }, // refresh once a day
+  });
+
+  if (!res.ok) throw new Error(`TMDB responded with ${res.status}`);
+
+  const data = (await res.json()) as { results: TmdbMovie[] };
+
+  return data.results.slice(0, 12).map((m) => ({
+    tmdbId: m.id,
+    title: m.title,
+    overview: m.overview,
+    posterUrl: m.poster_path
+      ? `https://image.tmdb.org/t/p/w342${m.poster_path}`
+      : null,
+    releaseYear: m.release_date ? Number(m.release_date.slice(0, 4)) : null,
+  }));
+}

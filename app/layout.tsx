@@ -54,14 +54,17 @@ export default function RootLayout({
               </Show>
 
               <Show when="signed-in">
-                <Link
-                  href="/search"
-                  className="text-sm text-muted hover:text-cream transition-colors"
-                >
-                  Journal
+                <Link href="/dashboard" className="text-sm text-muted hover:text-cream transition-colors">
+                      Discover
                 </Link>
-                <UserButton />
-              </Show>
+                <Link href="/watchlist" className="text-sm text-muted hover:text-cream transition-colors">
+                     Watchlist
+                </Link>
+                <Link href="/chat" className="text-sm text-muted hover:text-cream transition-colors">
+                     Chat
+                </Link>
+          <UserButton />
+          </Show>
             </div>
           </header>
 
