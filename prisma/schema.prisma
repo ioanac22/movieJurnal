@@ -51,10 +51,26 @@ model QuizQuestion {
 
   question     String
   options      String[]
-  correctIndex Int      // ⚠️ NU pleacă NICIODATĂ către browser
+  correctIndex Int      // NU pleacă NICIODATĂ către browser
   order        Int
 
   createdAt DateTime @default(now())
 
   @@index([movieId])
+}
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+}
+
+model Friendship {
+  id          String           @id @default(cuid())
+  requesterId String           // Clerk userId who sent it
+  addresseeId String           // Clerk userId who received it
+  status      FriendshipStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId])
+  @@index([requesterId])
 }
