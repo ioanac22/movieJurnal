@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
+import FloatingChat from "@/components/FloatingChat";
+
 import {
   ClerkProvider,
   SignInButton,
@@ -60,16 +62,17 @@ export default function RootLayout({
                 <Link href="/watchlist" className="text-sm text-muted hover:text-cream transition-colors">
                      Watchlist
                 </Link>
-                <Link href="/chat" className="text-sm text-muted hover:text-cream transition-colors">
-                     Chat
-                </Link>
           <UserButton />
           </Show>
             </div>
           </header>
 
           {children}
+          <Show when="signed-in">
+            <FloatingChat />
+          </Show>
         </body>
+
       </html>
     </ClerkProvider>
   );

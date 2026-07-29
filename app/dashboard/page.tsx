@@ -19,9 +19,6 @@ export default async function DashboardPage() {
         <Link href="/watchlist" className="px-5 py-2 rounded-full bg-surface-hi hover:bg-lavender hover:text-ink transition-colors text-sm">
           My watchlist
         </Link>
-        <Link href="/chat" className="px-5 py-2 rounded-full bg-surface-hi hover:bg-apricot hover:text-ink transition-colors text-sm">
-          Ask about film
-        </Link>
       </div>
 
       <h2 className="text-2xl font-semibold mb-1">Trending this week</h2>
