@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Question = { id: string; question: string; options: string[]; order: number };
@@ -15,7 +15,13 @@ export default function QuizClient({ entryId, title }: { entryId: string; title:
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
 
+  // React StrictMode runs effects twice in dev — this guard stops a double generation
+  const fetched = useRef(false);
+
   useEffect(() => {
+    if (fetched.current) return;
+    fetched.current = true;
+
     fetch("/api/quiz/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -45,12 +51,12 @@ export default function QuizClient({ entryId, title }: { entryId: string; title:
     router.push("/watchlist");
   }
 
-  if (error) return <p className="text-blush">{error}</p>;
-  if (!questions.length) return <p className="text-muted">Writing your questions…</p>;
+  if (error) return <p className="text-blush text-center">{error}</p>;
+  if (!questions.length) return <p className="text-muted text-center">Writing your questions…</p>;
 
   if (result) {
     return (
-      <div className="max-w-lg">
+      <div className="max-w-lg mx-auto">
         <h2 className="text-3xl font-semibold mb-3">
           {result.passed ? "Verified ✓" : "Not quite"}
         </h2>
@@ -101,7 +107,7 @@ export default function QuizClient({ entryId, title }: { entryId: string; title:
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl mx-auto">
       <h1 className="text-2xl font-semibold mb-1">{title}</h1>
       <p className="text-sm text-muted mb-10">Answer at least 4 of 5 correctly.</p>
 

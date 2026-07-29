@@ -15,6 +15,7 @@ RULES:
 - Questions must be about specific scenes, dialogue, visual details, character actions, or plot twists.
 - NEVER ask about facts findable without watching: director, release year, cast, awards, box office, general premise.
 - A person who only read the synopsis must fail.
+- Each question must cover a DIFFERENT moment in the film. Never ask about the same event twice.
 - Exactly 4 options per question, exactly one correct.
 - Wrong options must be plausible, not absurd.
 - Output valid JSON only.`;
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
   const existing = await prisma.quizQuestion.findMany({
     where: { movieId: entry.movieId },
     orderBy: { order: "asc" },
+    take: 5,
     select: { id: true, question: true, options: true, order: true },
   });
 
@@ -51,7 +53,7 @@ export async function POST(request: NextRequest) {
 
   const prompt = `Film: "${entry.movie.title}" (${entry.movie.releaseYear ?? "unknown year"})
 
-Write 5 questions verifying the viewer actually watched this film.
+Write 5 questions verifying the viewer actually watched this film. Each must cover a different moment.
 
 Return JSON in this exact shape:
 {"questions":[{"question":"...","options":["a","b","c","d"],"correctIndex":0}]}`;
@@ -83,6 +85,7 @@ Return JSON in this exact shape:
     const saved = await prisma.quizQuestion.findMany({
       where: { movieId: entry.movieId },
       orderBy: { order: "asc" },
+      take: 5,
       select: { id: true, question: true, options: true, order: true },
     });
 
