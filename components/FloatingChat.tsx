@@ -49,9 +49,14 @@ export default function FloatingChat() {
       {open && (
         <div className="fixed bottom-24 right-6 z-50 w-[min(22rem,calc(100vw-3rem))] h-[28rem] rounded-3xl bg-surface border border-surface-hi shadow-2xl flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-surface-hi">
-            <div>
-              <p className="text-sm font-medium">Film talk</p>
-              <p className="text-xs text-muted">Cinema only</p>
+            <div className="flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-full bg-lavender text-ink font-semibold text-sm flex items-center justify-center">
+                F
+              </span>
+              <div>
+                <p className="text-sm font-medium">Your film companion</p>
+                <p className="text-xs text-muted">Here to talk movies</p>
+              </div>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -121,10 +126,10 @@ export default function FloatingChat() {
       {/* Bubble */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blush text-ink text-xl shadow-lg hover:bg-apricot hover:scale-105 transition-all cursor-pointer flex items-center justify-center"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-lavender text-ink text-2xl font-semibold shadow-lg hover:scale-105 transition-transform cursor-pointer flex items-center justify-center"
         aria-label={open ? "Close chat" : "Open film chat"}
       >
-        {open ? "×" : "🎬"}
+        {open ? "×" : "F"}
       </button>
     </>
   );

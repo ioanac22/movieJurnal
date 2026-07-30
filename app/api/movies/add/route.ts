@@ -8,17 +8,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { tmdbId, title, overview, posterUrl, releaseYear } = await request.json();
+  const { tmdbId, title, overview, posterUrl, releaseYear, mediaType } =
+    await request.json();
 
   if (!tmdbId || !title) {
     return NextResponse.json({ error: "Missing data" }, { status: 400 });
   }
 
+  const type = mediaType === "tv" ? "tv" : "movie";
+
   const movie = await prisma.movie.upsert({
-    where: { tmdbId },
+    where: { tmdbId_mediaType: { tmdbId, mediaType: type } },
     update: {},
     create: {
       tmdbId,
+      mediaType: type,
       title,
       overview: overview || null,
       posterPath: posterUrl || null,

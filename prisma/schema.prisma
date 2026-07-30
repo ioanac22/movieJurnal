@@ -10,7 +10,8 @@ datasource db {
 
 model Movie {
   id          String   @id @default(cuid())
-  tmdbId      Int      @unique
+  tmdbId      Int
+  mediaType   String   @default("movie") // "movie" | "tv"
   title       String
   overview    String?
   posterPath  String?
@@ -19,6 +20,8 @@ model Movie {
 
   journalEntries JournalEntry[]
   quizQuestions  QuizQuestion[]
+
+  @@unique([tmdbId, mediaType])
 }
 
 model JournalEntry {
